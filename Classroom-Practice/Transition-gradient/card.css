@@ -1,0 +1,29 @@
+.container {
+    width: 400px;
+    height: 500px;
+    border: 1px solid red;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card {
+    width: 200px;
+    height: 300px;
+    border: 1px solid black;
+    background-image: linear-gradient(to bottom, rgba(255, 0, 0, 0.5), rgba(0, 0, 255, 0.5)), url('https://images.unsplash.com/photo-1682685790919-1e3f7c8b6d4e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8Y2FyZHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60');
+    text-align: center;
+
+    box-shadow: 10px -20px 20px rgba(15, 15, 119, 0.5);
+
+    transition: 1.113s;
+}
+
+.card:hover {
+    box-shadow: 
+        -10px -20px 20px red,
+        10px 10px 20px blue;
+        transform: rotate(250deg) scale(1.2);
+        transform: skew(20deg, 20deg);
+}
