@@ -1,0 +1,103 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Registration</title>
+    <style>
+        input {
+            display: block;
+            margin: 10px 0;
+            padding: 8px;
+            border: 2px solid gray;
+        }
+        .valid {
+            border-color: green;
+        }
+        .invalid {
+            border-color: red;
+        }
+        .error {
+            color: red;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Student Registration Form</h2>
+    <form id="studentForm" novalidate>
+        <input id="name" placeholder="Name">
+        <div id="nameError" class="error"></div>
+
+        <input id="email" placeholder="Email">
+        <div id="emailError" class="error"></div>
+
+        <input id="phone" placeholder="Phone">
+        <div id="phoneError" class="error"></div>
+
+        <input id="password" type="password" placeholder="Password">
+        <div id="passwordError" class="error"></div>
+
+        <button type="submit">Register</button>
+    </form>
+
+    <script>
+        const form = document.getElementById("studentForm");
+
+        const validations = {
+            name: {
+                regex: /^[A-Za-z]+$/,
+                message: "Name must contain alphabets only."
+            },
+            email: {
+                regex: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                message: "Enter a valid email address."
+            },
+            phone: {
+                regex: /^\d{10}$/,
+                message: "Phone must contain exactly 10 digits."
+            },
+            password: {
+                regex: /^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9\s])\S+$/,
+                message: "Password needs an uppercase letter, a number, and a special character."
+            }
+        };
+
+        function validateField(fieldName) {
+            const input = document.getElementById(fieldName);
+            const error = document.getElementById(fieldName + "Error");
+            const validation = validations[fieldName];
+            const isValid = validation.regex.test(input.value);
+
+            input.classList.toggle("valid", isValid);
+            input.classList.toggle("invalid", !isValid);
+            error.textContent = isValid ? "" : validation.message;
+
+            return isValid;
+        }
+
+        Object.keys(validations).forEach(fieldName => {
+            document.getElementById(fieldName).addEventListener("input", () => {
+                validateField(fieldName);
+            });
+        });
+
+        form.addEventListener("submit", event => {
+            event.preventDefault();
+
+            const isFormValid = Object.keys(validations)
+                .map(validateField)
+                .every(Boolean);
+
+            if (isFormValid) {
+                alert("Registration successful!");
+                form.reset();
+
+                Object.keys(validations).forEach(fieldName => {
+                    document.getElementById(fieldName).className = "";
+                    document.getElementById(fieldName + "Error").textContent = "";
+                });
+            }
+        });
+    </script>
+</body>
+</html>
