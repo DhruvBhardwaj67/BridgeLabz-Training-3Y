@@ -1,0 +1,158 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Multi Step Form</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #f2f2f2;
+            text-align: center;
+            margin-top: 70px;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            width: 350px;
+            margin: auto;
+            border-radius: 10px;
+        }
+
+        input {
+            width: 90%;
+            padding: 12px;
+            margin: 15px 0;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+        }
+
+        .step {
+            display: none;
+        }
+
+        .active {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>Registration Form</h2>
+
+    <form id="myForm">
+
+        <div class="step active">
+            <h3>Step 1: Name</h3>
+            <input type="text" id="name"
+                placeholder="Enter Name" required>
+        </div>
+
+        <div class="step">
+            <h3>Step 2: Email</h3>
+            <input type="email" id="email"
+                placeholder="Enter Email" required>
+        </div>
+
+        <div class="step">
+            <h3>Step 3: Password</h3>
+            <input type="password" id="password"
+                placeholder="Enter Password"
+                minlength="6" required>
+        </div>
+
+        <button type="button" id="back">Back</button>
+
+        <button type="button" id="next">Next</button>
+
+    </form>
+
+    <div id="summary" hidden></div>
+
+</div>
+
+<script>
+const steps = document.querySelectorAll(".step");
+
+const nextBtn = document.getElementById("next");
+const backBtn = document.getElementById("back");
+
+const form = document.getElementById("myForm");
+const summary = document.getElementById("summary");
+
+let currentStep = 0;
+
+function showStep() {
+    steps.forEach(function(step, index) {
+        step.classList.toggle(
+            "active",
+            index === currentStep
+        );
+    });
+
+    backBtn.style.display =
+        currentStep === 0 ? "none" : "inline-block";
+
+    nextBtn.textContent =
+        currentStep === 2 ? "Submit" : "Next";
+}
+
+nextBtn.addEventListener("click", function() {
+
+    const currentInput =
+        steps[currentStep].querySelector("input");
+
+    if (!currentInput.checkValidity()) {
+        currentInput.reportValidity();
+        return;
+    }
+
+    if (currentStep < 2) {
+        currentStep++;
+        showStep();
+    }
+    else {
+        form.hidden = true;
+        summary.hidden = false;
+
+        summary.innerHTML = `
+            <h2>Registration Successful!</h2>
+            <p>Name: ${escapeHTML(document.getElementById("name").value)}</p>
+            <p>Email: ${escapeHTML(document.getElementById("email").value)}</p>
+            <p>Password: ********</p>
+        `;
+    }
+});
+
+backBtn.addEventListener("click", function() {
+    if (currentStep > 0) {
+        currentStep--;
+        showStep();
+    }
+});
+
+function escapeHTML(value) {
+    return value.replace(/[&<>"']/g, function(char) {
+        return {
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;"
+        }[char];
+    });
+}
+
+showStep();
+</script>
+
+</body>
+</html>

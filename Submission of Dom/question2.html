@@ -1,0 +1,92 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Character Counter</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+            margin-top: 80px;
+        }
+
+        textarea {
+            width: 350px;
+            height: 150px;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        #counter {
+            font-weight: bold;
+            color: green;
+        }
+
+        .warning {
+            color: orange !important;
+        }
+
+        .danger {
+            color: red !important;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Live Character Counter</h2>
+
+<textarea id="message"
+    placeholder="Type your message..."></textarea>
+
+<h3 id="counter">100 characters remaining</h3>
+
+<button id="reset">Reset</button>
+
+<script>
+const textarea = document.getElementById("message");
+const counter = document.getElementById("counter");
+const reset = document.getElementById("reset");
+
+const maxLength = 100;
+
+function updateCounter() {
+    const remaining = maxLength - textarea.value.length;
+
+    counter.textContent = remaining +
+        " characters remaining";
+
+    counter.className = "";
+
+    if (remaining <= 0) {
+        counter.classList.add("danger");
+    }
+    else if (remaining <= 20) {
+        counter.classList.add("warning");
+    }
+}
+
+textarea.addEventListener("keydown", function(event) {
+    if (
+        textarea.value.length >= maxLength &&
+        event.key.length === 1 &&
+        !event.ctrlKey &&
+        !event.metaKey &&
+        !event.altKey
+    ) {
+        event.preventDefault();
+    }
+});
+
+textarea.addEventListener("input", updateCounter);
+
+reset.addEventListener("click", function() {
+    textarea.value = "";
+    updateCounter();
+});
+
+updateCounter();
+</script>
+
+</body>
+</html>
