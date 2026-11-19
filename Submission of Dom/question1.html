@@ -1,0 +1,124 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Product Manager</title>
+    <style>
+        body {
+            font-family: Arial;
+            margin: 40px;
+            background: #f4f4f4;
+        }
+        .container {
+            max-width: 500px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+        }
+        input {
+            padding: 10px;
+            width: 65%;
+        }
+        button {
+            padding: 10px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        li {
+            padding: 10px;
+            margin: 10px 0;
+            background: #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .edit-input {
+            width: 55%;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Product Manager</h2>
+
+    <input type="text" id="productInput"
+        placeholder="Enter product name">
+
+    <button id="addBtn">Add Product</button>
+
+    <ul id="productList"></ul>
+</div>
+
+<script>
+const input = document.getElementById("productInput");
+const addBtn = document.getElementById("addBtn");
+const list = document.getElementById("productList");
+
+addBtn.addEventListener("click", function() {
+    const product = input.value.trim();
+
+    if (product === "") {
+        alert("Please enter a product!");
+        return;
+    }
+
+    const li = document.createElement("li");
+
+    const span = document.createElement("span");
+    span.textContent = product;
+
+    const editBtn = document.createElement("button");
+    editBtn.textContent = "Edit";
+    editBtn.className = "edit";
+
+    const deleteBtn = document.createElement("button");
+    deleteBtn.textContent = "Delete";
+    deleteBtn.className = "delete";
+
+    li.append(span, editBtn, deleteBtn);
+    list.appendChild(li);
+
+    input.value = "";
+});
+
+// Event Delegation
+list.addEventListener("click", function(event) {
+    const li = event.target.closest("li");
+
+    if (!li || !list.contains(li)) return;
+
+    if (event.target.classList.contains("delete")) {
+        li.remove();
+    }
+
+    if (event.target.classList.contains("edit")) {
+        const span = li.querySelector("span");
+
+        const editInput = document.createElement("input");
+        editInput.value = span.textContent;
+        editInput.className = "edit-input";
+
+        span.replaceWith(editInput);
+
+        editInput.focus();
+
+        editInput.addEventListener("blur", function() {
+            const newSpan = document.createElement("span");
+            newSpan.textContent = editInput.value.trim() ||
+                                  "Unnamed Product";
+            editInput.replaceWith(newSpan);
+        });
+
+        editInput.addEventListener("keydown", function(e) {
+            if (e.key === "Enter") {
+                editInput.blur();
+            }
+        });
+    }
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,81 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Custom Form Builder</title>
+</head>
+<body>
+    <h2>Dynamic Form</h2>
+    <div id="formContainer"></div>
+    <pre id="result"></pre>
+
+    <script>
+        class FormBuilder {
+            constructor(fields, containerId) {
+                this.fields = fields;
+                this.container = document.getElementById(containerId);
+            }
+
+            createForm() {
+                const form = document.createElement("form");
+                form.id = "dynamicForm";
+
+                this.fields.forEach((field, index) => {
+                    const wrapper = document.createElement("div");
+                    const label = document.createElement("label");
+                    const input = document.createElement("input");
+
+                    const inputId = `field_${index}`;
+
+                    label.htmlFor = inputId;
+                    label.textContent = field.label;
+
+                    input.type = field.type;
+                    input.id = inputId;
+                    input.name = field.name || `field_${index}`;
+                    input.required = field.required ?? true;
+
+                    wrapper.append(label, input);
+                    form.appendChild(wrapper);
+                });
+
+                const button = document.createElement("button");
+                button.type = "submit";
+                button.textContent = "Submit";
+                form.appendChild(button);
+
+                form.addEventListener("submit", event => {
+                    event.preventDefault();
+                    const data = this.getFormData();
+                    document.getElementById("result").textContent =
+                        JSON.stringify(data, null, 2);
+                });
+
+                this.container.replaceChildren(form);
+            }
+
+            getFormData() {
+                const form = this.container.querySelector("form");
+                const data = {};
+
+                this.fields.forEach((field, index) => {
+                    const key = field.name || `field_${index}`;
+                    data[key] = form.elements[key].value;
+                });
+
+                return data;
+            }
+        }
+
+        const fields = [
+            { type: "text", label: "Username", name: "username" },
+            { type: "email", label: "Email", name: "email" },
+            { type: "password", label: "Password", name: "password" },
+            { type: "number", label: "Age", name: "age" }
+        ];
+
+        const builder = new FormBuilder(fields, "formContainer");
+        builder.createForm();
+    </script>
+</body>
+</html>
